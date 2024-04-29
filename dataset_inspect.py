@@ -3,7 +3,7 @@ import os
 import random
 
 
-folder = os.path.join(os.path.dirname(__file__), 'data/syntetic_asl_dataset/Test_Alphabet')
+folder = os.path.join(os.path.dirname(__file__), 'data/synthetic_asl_dataset/Test_Alphabet')
 
 for letter in os.listdir(folder):
     folder_letter = os.path.join(folder, letter)
