@@ -1,5 +1,11 @@
 # ASL_classification
 
+Table of contents:
+
+- [Introduction](#introduction)
+- [Setup](#setup)
+- [Data Inspection](#data-inspection)
+
 ## Introduction
 
 Classification of American Sign Language (ASL) images.
@@ -15,3 +21,11 @@ Run the [dataset_creation.py](dataset_creation.py) in order to rename the data a
 
     python3 dataset_creation.py
 
+
+## Data Inspection
+
+If you wish to inspect the Data, run
+
+    python3 dataset_inspect.py
+
+This will generate a plot with one randomly sampled image for each letter in the alphabet.
