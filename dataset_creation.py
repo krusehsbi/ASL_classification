@@ -31,10 +31,15 @@ def format_set(folder):
             
             
 
-folder_train = os.path.join(os.path.dirname(__file__), 'data/synthetic_asl_dataset/Train_Alphabet')
+
+
+'''folder_train = os.path.join(os.path.dirname(__file__), 'data/synthetic_asl_dataset/Train_Alphabet')
 folder_test = os.path.join(os.path.dirname(__file__), 'data/synthetic_asl_dataset/Test_Alphabet')
 
 print('RENAMING TRAIN-SET...')
 format_set(folder_train)
 print('RENAMING TEST-SET...')
-format_set(folder_test)
+format_set(folder_test)'''
+
+folder_alex = os.path.join(os.path.dirname(__file__), 'data/alex_test')
+format_set(folder_alex)
