@@ -2,9 +2,12 @@ import pandas as pd
 import os
 import numpy as np
 import tensorflow as tf
+import sys
 
-EPOCHS = 10
-BATCH_SIZE = 16
+LEARNING_RATE = float(sys.argv[1])
+EPOCHS = int(sys.argv[2])
+BATCH_SIZE = int(sys.argv[3])
+
 INPUT_SHAPE = (224, 224)
 
 # Read data
@@ -71,7 +74,7 @@ outputs = tf.keras.layers.Dense(27, activation='softmax')(x)
 final_model = tf.keras.Model(inputs=inputs, outputs=outputs)
 
 # Compile the model
-final_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.0001),
+final_model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE),
                     loss='categorical_crossentropy',
                     metrics=['accuracy'])
 
@@ -82,3 +85,13 @@ final_model.summary()
 history = final_model.fit(train_dataset,
                           epochs=EPOCHS,
                           validation_data=val_dataset)
+
+model_name = 'MobileNetV2_lr{}_epochs{}_batchSize{}.keras'.format(LEARNING_RATE, EPOCHS, BATCH_SIZE)
+model_path = csv_train = os.path.join(os.path.dirname(__file__), 'models/' + model_name)
+final_model.save(model_path)
+
+hist_name = 'MobileNetV2_lr{}_epochs{}_batchSize{}.csv'.format(LEARNING_RATE, EPOCHS, BATCH_SIZE)
+hist_path = csv_train = os.path.join(os.path.dirname(__file__), 'hists/' + hist_name)
+hist_df = pd.DataFrame(history.history)
+with open(hist_path, mode='w') as file:
+    hist_df.to_csv(file)
