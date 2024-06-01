@@ -6,6 +6,7 @@ import cv2
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
+import random
 
 BATCH_SIZE = 16
 INPUT_SHAPE = (224, 224)
@@ -35,7 +36,7 @@ ds_test = ds_test.map(preprocess)
 # batch and prefetch dataset
 test_dataset = ds_test.batch(BATCH_SIZE).prefetch(buffer_size=tf.data.AUTOTUNE)
 
-model = tf.keras.models.load_model(os.path.join(os.path.dirname(__file__), "models/customV1.keras"))
+model = tf.keras.models.load_model(os.path.join(os.path.dirname(__file__), "models/customV2.keras"))
 model.summary()
 
 eval_test = model.evaluate(test_dataset)
@@ -56,24 +57,23 @@ print('Confusion Matrix ---------------------------------')
 # Ensure the test dataset is batched
 ds_test = ds_test.batch(32)
 
-# Step 1: Make predictions
+# Make predictions
 predictions = model.predict(ds_test)
 predicted_labels = np.argmax(predictions, axis=1)
 
-# Step 2: Extract true labels from the dataset
+# Extract true labels from the dataset
 true_labels = np.concatenate([y for x, y in ds_test], axis=0)
 
-# If your true labels are one-hot encoded, convert them to class indices
 if true_labels.ndim > 1:
     true_labels = np.argmax(true_labels, axis=1)
 
-# Step 3: Compute the confusion matrix
+# Compute the confusion matrix
 conf_matrix = tf.math.confusion_matrix(true_labels, predicted_labels)
 
-# Step 4: Print the confusion matrix
+# Print the confusion matrix
 print("Confusion Matrix (TensorFlow):\n", conf_matrix)
 
-# Step 5: Visualize the confusion matrix using Matplotlib and Seaborn
+# Visualize the confusion matrix using Matplotlib and Seaborn
 def plot_confusion_matrix(cm, class_names):
     """
     Returns a matplotlib figure containing the plotted confusion matrix.
@@ -92,4 +92,21 @@ class_names = ['A', 'B', 'Blank', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', '
 
 # Plotting the confusion matrix
 figure = plot_confusion_matrix(conf_matrix_np, class_names)
+plt.show()
+
+print('Show missclassified images --------------------------------------')
+images = np.concatenate([x for x, y in ds_test], axis=0)
+mismatched_indices = np.where(predicted_labels != true_labels)[0]
+mismatched_images = images[mismatched_indices]
+mismatched_true_labels = true_labels[mismatched_indices]
+mismatched_predicted_labels = predicted_labels[mismatched_indices]
+
+num_images = 5
+sampled_elements = random.sample(list(mismatched_images), num_images)
+
+plt.figure(figsize=(15, 5))
+for i in range(num_images):
+    plt.subplot(1, num_images, i + 1)
+    plt.imshow(sampled_elements[i]/255)  # Display the ith image
+    plt.axis('off')  # Turn off axis labels
 plt.show()
