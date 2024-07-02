@@ -5,12 +5,12 @@ from customCNN_v7 import CustomCNN_v7
 from student_model import StudentCNN
 
 # Constants
-LEARNING_RATE = 0.0001
+LEARNING_RATE = 0.1
 EPOCHS = 10
 BATCH_SIZE = 16
 INPUT_SHAPE = (224, 224, 3)
-ALPHA = 0.1
-TEMPERATURE = 3.0
+ALPHA = 0.9
+TEMPERATURE = 1.0
 
 # Read data
 csv_train = os.path.join(os.path.dirname(__file__), 'data/asl_test/data.csv')
