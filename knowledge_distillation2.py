@@ -5,6 +5,7 @@ from customCNN_v7 import CustomCNN_v7
 from student_model import StudentCNN
 from student_model2 import StudentCNN2
 from distiller import Distiller
+from distiller2 import Distiller2
 import keras
 
 # Constants
@@ -12,8 +13,8 @@ import keras
 EPOCHS = 1000
 BATCH_SIZE = 8
 INPUT_SHAPE = (224, 224)
-# ALPHA = 0.1
-TEMPERATURE = 15
+ALPHA = 0.1
+TEMPERATURE = 10
 
 # Read data
 csv_train = os.path.join(os.path.dirname(__file__), 'asl_dataset/data.csv')
@@ -63,7 +64,7 @@ augmentation = tf.keras.Sequential([
 # Load Teacher Model  --------------------------------------------------------------------------------------------------
 teacher_model = tf.keras.models.load_model('models/customV7.keras')
 
-# Define the student model
+'''# Define the student model
 student_model = StudentCNN2(img_shape=INPUT_SHAPE + (3,))
 inputs = student_model.input_layer
 x = augmentation(inputs)
@@ -81,9 +82,9 @@ student_model.compile(
 )
 
 # Überprüfe die Modellzusammenfassung
-student_model.summary()
+student_model.summary()'''
 
-'''model = tf.keras.applications.MobileNetV2(weights=None, include_top=False, input_shape=INPUT_SHAPE + (3,))
+model = tf.keras.applications.MobileNetV2(weights=None, include_top=False, input_shape=INPUT_SHAPE + (3,))
 preprocess_mobilenet = tf.keras.applications.mobilenet_v2.preprocess_input
 
 inputs = tf.keras.Input(shape=INPUT_SHAPE + (3,))
@@ -97,14 +98,16 @@ x = tf.keras.layers.Dropout(0.5)(x)
 outputs = tf.keras.layers.Dense(27, activation='softmax', kernel_regularizer=tf.keras.regularizers.l2(0.01))(x)
 
 # Define the model
-student_model = tf.keras.Model(inputs=inputs, outputs=outputs)'''
+student_model = tf.keras.Model(inputs=inputs, outputs=outputs)
 
 # Initialize and compile distiller
-distiller = Distiller(student=student_model, teacher=teacher_model)
+distiller = Distiller2(student=student_model, teacher=teacher_model)
 distiller.compile(
     optimizer=keras.optimizers.Adam(),
     metrics=['accuracy'],
+    student_loss_fn=tf.keras.losses.CategoricalCrossentropy(),
     distillation_loss_fn=keras.losses.KLDivergence(),
+    alpha=ALPHA,
     temperature=TEMPERATURE,
 )
 
@@ -120,11 +123,11 @@ _, top1_accuracy = student.evaluate(val_dataset)
 print(f"Top-1 accuracy on the test set: {round(top1_accuracy * 100, 2)}%")
 
 # Save the student model
-distiller.save('models/distiller_model_{}.keras'.format(TEMPERATURE))
+distiller.save('models/distiller_model_mobilenet_{}_{}.keras'.format(TEMPERATURE, ALPHA))
 
-distiller.student.save('models/student_model_{}.keras'.format(TEMPERATURE))
+distiller.student.save('models/student_model_mobilenet_{}_{}.keras'.format(TEMPERATURE, ALPHA))
 
-hist_name = 'student_teacher_{}.csv'.format(TEMPERATURE)
+hist_name = 'student_teacher_mobilenet_{}_{}.csv'.format(TEMPERATURE, ALPHA)
 hist_path = os.path.join(os.path.dirname(__file__), 'hists/' + hist_name)
 hist_df = pd.DataFrame(history.history)
 with open(hist_path, mode='w') as file:
