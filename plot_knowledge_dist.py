@@ -26,7 +26,8 @@ def plot_data_from_csv(file_path, color):
     plt.plot(df['iteration'], df['val_distillation_loss'], label='Validation Distillation Loss (T={})'.format(temp), color=color, linestyle=':')
 
 # List of CSV files to plot
-csv_files = [os.path.join(os.path.dirname(__file__), 'hists/student_teacher_mobilenet_5.csv'), 
+csv_files = [os.path.join(os.path.dirname(__file__), 'hists/student_teacher_mobilenet_3.csv'), 
+            os.path.join(os.path.dirname(__file__), 'hists/student_teacher_mobilenet_5.csv'),
             os.path.join(os.path.dirname(__file__), 'hists/student_teacher_mobilenet_10.csv')]  # Replace with your actual file names
 
 # Define a list of colors for different models
@@ -40,7 +41,7 @@ for i, file_path in enumerate(csv_files):
     plot_data_from_csv(file_path, color)
 
 # Add titles and labels
-plt.title('Training and Validation Metrics Over Iterations for Multiple Models')
+plt.title('Training and Validation Loss der Knowledge-Distillation mit unterschiedlichem T')
 plt.xlabel('Iteration')
 plt.ylabel('Value')
 plt.legend()
