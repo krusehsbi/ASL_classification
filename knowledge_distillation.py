@@ -1,3 +1,10 @@
+'''
+Module taking care of the knowledge Distillation Process. Here the train-step is defined
+in a custom train_step function. The Combined loss-function is defined within it.
+This module was later on replaced by knowledge_distillation2 which uses a more sofisitcated approach
+using a seperate Distiller class.
+'''
+
 import pandas as pd
 import os
 import tensorflow as tf

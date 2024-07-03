@@ -1,3 +1,15 @@
+'''
+Impoved Distiller class holding the teacher- and student-model used for the distillation process.
+The training step is defined in the train_step method.
+This class has a few minor improvements over the older Distiller class.
+
+DISCLAIMER: THE CONTENT OF THIS MODULE WAS ADAPTED AFTER THE FOLLOWING TWO KERAS-TUTORIALS. BOTH
+TUTORIALS WERE COMBINED AND ADAPTED TO THE APPLICATION AT HAND.
+
+- https://keras.io/examples/vision/knowledge_distillation/
+- https://keras.io/examples/keras_recipes/better_knowledge_distillation/
+'''
+
 import keras
 import tensorflow as tf
 
